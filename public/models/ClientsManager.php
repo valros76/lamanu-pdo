@@ -63,6 +63,30 @@ class ClientsManager
       return $req->fetchAll(PDO::FETCH_OBJ);
    }
 
+   public function getCardInfos(Client $client){
+      if($client->getCardNumber != null){
+         $req = $this->_bdd->prepare('SELECT `id`, `cardNumber`, `cardTypesId` FROM `cards` WHERE `cardNumber` = :cardNumber');
+         $req->bindValue(':cardNumber', $client->getCardNumber(), PDO::PARAM_INT);
+         $req->execute();
+         return $req->fetch(PDO::FETCH_OBJ);
+      }else{
+         return false;
+      }
+   }
+
+   public function getCardType(Client $client){
+      $set_req = 
+      'SELECT `cardtypes`.`type` 
+      FROM `cards` 
+      INNER JOIN `clients` ON  `cards`.`cardNumber` = :cardNumber
+      INNER JOIN `cardtypes` ON `cards`.`cardTypesId` = `cardtypes`.`id`
+      GROUP BY `cardtypes`.`type` ';
+      $req = $this->_bdd->prepare($set_req);
+      $req->bindValue(':cardNumber', $client->getCardNumber(), PDO::PARAM_INT);
+      $req->execute();
+      return $req->fetchColumn();
+   }
+
    public function filtred($column, $filter, $order){
       $set_req = 'SELECT `id`,`lastName`,`firstName` FROM `clients` WHERE '.$column.' LIKE "'.$filter.'" ORDER BY '.$order;
       $req = $this->_bdd->prepare($set_req);

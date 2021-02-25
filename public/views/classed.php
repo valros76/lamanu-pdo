@@ -7,7 +7,8 @@ $clientsWithCards = $clientsManager->getClientsWithCard();
 $clientsLastnameBeginByM = $clientsManager->filtred('lastName','M%','lastName');
 $showtypesManager = new ShowtypesManager($bdd);
 $showtypes = $showtypesManager->getList();
-$showPresentations = $bdd->query('SELECT title,performer,DATE_FORMAT(date, "%e-%c-%Y") as date,startTime FROM shows ORDER BY title')->fetchAll(PDO::FETCH_OBJ);
+$showsManager = new ShowsManager($bdd);
+$showPresentations = $showsManager->showPresentation();
 ob_start();; ?>
 <section class="main-sections grid-auto-fill-row-dense grid-row-100">
    <h2 class="grid-row-100 flex">
@@ -125,7 +126,8 @@ ob_start();; ?>
       Numéro de carte : Numéro de la carte fidélité du client s'il en possède une.
    </h2>
    <?php
-   foreach ($clients as $client) {; ?>
+   foreach ($clients as $client) {
+   ;?>
       <div class="data-card flex-column-center">
          <h2><?= $client->id; ?></h2>
          <p>
@@ -138,12 +140,20 @@ ob_start();; ?>
             Date de naissance : <br/><?= $client->birthDate; ?>
          </p>
          <p>
-            Carte de fidélité :
+            Carte de fidélité :<br/>
             <?php
-            if ($client->card != 0) {
+            if ($client->cardNumber != null) {
+               if($clientsManager->getCardType($clientsManager->get($client->id)) == 'Fidélité'){
+               ;?>
+                  Oui<br/>
+                  Numéro de carte :<br>
+                  <?= $client->cardNumber ;?>
+               <?php
+               }else{
+                  echo 'Non';
+               }
+            }else{
                echo 'Non';
-            } else {
-               echo 'Oui<br/>Numéro de carte : '.$client->cardNumber;
             }; ?>
          </p>
       </div>

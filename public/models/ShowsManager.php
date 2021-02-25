@@ -53,6 +53,12 @@ class ShowsManager
       return $req->fetchAll(PDO::FETCH_OBJ);
    }
 
+   public function showPresentation(){
+      $req = $this->_bdd->prepare('SELECT `title`,`performer`,DATE_FORMAT(date, "%e-%c-%Y") as `date`,`startTime` FROM `shows` ORDER BY `title`');
+      $req->execute();
+      return $req->fetchAll(PDO::FETCH_OBJ);
+   }
+
    public function filtred($filter){
       $set_req = 'SELECT `id`,`title`,`performer`,`date`,`showTypesId`,`firstGenresId`,`secondGenreId`,`duration`,`startTime` FROM `shows` WHERE type LIKE "'.$filter.'" ORDER BY `id`';
       $req = $this->_bdd->prepare($set_req);
