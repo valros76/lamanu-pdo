@@ -1,14 +1,14 @@
 <?php
 /* Afficher tous les clients. */
-$clients = $bdd->query('SELECT id,lastName,firstName,DATE_FORMAT(birthDate, "%e-%c-%Y") as birthDate,card,cardNumber FROM clients')->fetchAll(PDO::FETCH_OBJ);
-$showtypes = $bdd->query('SELECT id,type FROM showtypes')->fetchAll(PDO::FETCH_OBJ);
-$setLimitClients = 5;
-$clientsLimit = $bdd->prepare('SELECT id,lastName,firstName FROM clients ORDER BY id LIMIT 0,20');
-$clientsWithCards = $bdd->query('SELECT id,lastName,firstName FROM clients WHERE card = 1 ORDER BY id')->fetchAll(PDO::FETCH_OBJ);
-$clientsLastnameBeginByM = $bdd->query('SELECT id,lastName,firstName FROM clients WHERE `lastName` LIKE "M%" ORDER BY lastName')->fetchAll(PDO::FETCH_OBJ);
+$clientsManager = new ClientsManager($bdd);
+$clients = $clientsManager->getList();
+$clientsLimit = $clientsManager->getListLimit(20);
+$clientsWithCards = $clientsManager->getClientsWithCard();
+$clientsLastnameBeginByM = $clientsManager->filtred('lastName','M%','lastName');
+$showtypesManager = new ShowtypesManager($bdd);
+$showtypes = $showtypesManager->getList();
 $showPresentations = $bdd->query('SELECT title,performer,DATE_FORMAT(date, "%e-%c-%Y") as date,startTime FROM shows ORDER BY title')->fetchAll(PDO::FETCH_OBJ);
 ob_start();; ?>
-
 <section class="main-sections grid-auto-fill-row-dense grid-row-100">
    <h2 class="grid-row-100 flex">
       Afficher tous les clients
@@ -46,9 +46,7 @@ ob_start();; ?>
       Afficher les 20 premiers clients.
    </h2>
    <?php
-   $clientsLimit->execute();
-   $showLimitClients = $clientsLimit->fetchAll(PDO::FETCH_OBJ);
-   foreach ($showLimitClients as $limit_client) {; ?>
+   foreach ($clientsLimit as $limit_client) {; ?>
       <div class="data-card flex-column-center">
          <h2><?= $limit_client->id; ?></h2>
          <p>
@@ -137,7 +135,7 @@ ob_start();; ?>
             <?= $client->lastName; ?>
          </p>
          <p>
-            Date de naissance : <?= $client->birthDate; ?>
+            Date de naissance : <br/><?= $client->birthDate; ?>
          </p>
          <p>
             Carte de fidélité :

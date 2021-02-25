@@ -8,4 +8,4 @@ spl_autoload_register('loadClass');
 
 $bdd = BDD::dbConnect();
 
-require 'public/views/single.php';
+require 'public/views/classed.php';
