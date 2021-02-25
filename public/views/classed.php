@@ -63,14 +63,20 @@ ob_start();; ?>
       N'afficher que les clients possédant une carte de fidélité.
    </h2>
    <?php
-   foreach ($clientsWithCards as $clientsWithCard) {; ?>
+   foreach ($clientsWithCards as $clientsWithCard) {
+      if($clientsManager->getCardType($clientsManager->get($clientsWithCard->id)) == 'Fidélité'){
+      ;?>
       <div class="data-card flex-column-center">
          <h2><?= $clientsWithCard->id; ?></h2>
          <p>
             <?= $clientsWithCard->lastName . ' ' . $clientsWithCard->firstName; ?>
          </p>
+         <p>
+            Type de carte : <?= $clientsManager->getCardType($clientsManager->get($clientsWithCard->id)) ;?>
+         </p>
       </div>
    <?php
+   }
    }; ?>
 </section>
 
