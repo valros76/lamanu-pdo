@@ -150,7 +150,7 @@ ob_start();; ?>
                   <?= $client->cardNumber ;?>
                <?php
                }else{
-                  echo 'Non';
+                  echo $clientsManager->getCardType($clientsManager->get($client->id));
                }
             }else{
                echo 'Non';
