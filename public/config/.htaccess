@@ -1,0 +1,23 @@
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^lamanu-pdo\.test$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.lamanu-pdo.\.test$
+RewriteCond %{SERVER_PORT} 80
+RewriteRule ^(.*)$ https://www.lamanu-pdo.test/$1 [R,L]
+
+options -indexes
+
+AuthUserFile public/config
+AuthGroupFile /dev/null
+AuthName "Accès restreints - Veuillez vous authentifier"
+AuthType Basic
+require valid-user
+
+AuthUserFile public/config
+AuthName "Accès protégé"
+AuthType Basic
+Require valid-user
+
+AuthUserFile public/config
+AuthName "Accès protégé"
+AuthType Basic
+Require valid-user
