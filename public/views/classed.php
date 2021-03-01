@@ -10,6 +10,7 @@ $showtypes = $showtypesManager->getList();
 $showsManager = new ShowsManager($bdd);
 $showPresentations = $showsManager->showPresentation();
 ob_start();; ?>
+
 <section class="main-sections grid-auto-fill-row-dense grid-row-100">
    <h2 class="grid-row-100 flex">
       Afficher tous les clients
